@@ -1,5 +1,0 @@
-﻿  easywin32test.cpp
-  MainMenuSelection.cpp
-  코드를 생성하고 있습니다...
-C:\Users\모두\source\repos\KSchool\MainMenuSelection.cpp(42): warning C4715: 'keyControl': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  KSchool.vcxproj -> C:\Users\모두\source\repos\KSchool\x64\Debug\KSchool.exe
