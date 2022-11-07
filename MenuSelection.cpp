@@ -6,20 +6,21 @@
 #include <WinInet.h>
 #include <time.h>
 #include <ctime>
+#include "main.h"
 //#include <iostream>
 //#include "parson.h"
 #pragma comment(lib, "WinInet.lib")
 #pragma warning(disable:0546)
 
-// ±âº» Á¤ÀÇ ºÎºĞ
+// ê¸°ë³¸ ì •ì˜ ë¶€ë¶„
 
 #define BUFF_SIZE 1024
 
-//ÀÎÅÍ³İ ¿¬°á È®ÀÎ °ü·Ã
+//ì¸í„°ë„· ì—°ê²° í™•ì¸ ê´€ë ¨
 DWORD dwFlag;
 TCHAR szName[256];
 
-//¸Ş´º ÇÔ¼ö °³¹ß ºÎºĞ
+//ë©”ë‰´ í•¨ìˆ˜ ê°œë°œ ë¶€ë¶„
 #define UP 0
 #define DOWN 1
 #define LEFT 2
@@ -94,7 +95,7 @@ void add_scrollbar()
 int keyControl() {
 	int key_value = _getch();
 	if (key_value == 0xE0) {
-		//È®ÀåÅ°ÀÏ °æ¿ì Å° ¹ë·ù¸¦ ÇÏ³ª ´õ ÀÔ·Â¹Ş´Â´Ù.
+		//í™•ì¥í‚¤ì¼ ê²½ìš° í‚¤ ë°¸ë¥˜ë¥¼ í•˜ë‚˜ ë” ì…ë ¥ë°›ëŠ”ë‹¤.
 		key_value = _getch();
 		if (key_value == 72) {
 			return UP;
@@ -112,24 +113,24 @@ int keyControl() {
 			return RIGHT;
 		}//RIGHT
 	}
-	if (key_value == 32) return SUBMIT;
+	if (key_value == 13) return SUBMIT;
 	if (key_value == 27) return ESCAPE;
 }
 
 void init() {
-	system("mode con cols=107 lines=35");
-	system("title ÇĞ±³ ¾Ë¸®¹Ì ¾ËÆÄÅ×½ºÆ®");
-	//ÄÜ¼ÖÃ¢ Å©±â ¹× Á¤ÀÇ ÇÔ¼ö
+	system("mode con cols=107 lines=30");
+	system("title í•™êµ ì•Œë¦¬ë¯¸ ì•ŒíŒŒí…ŒìŠ¤íŠ¸");
+	//ì½˜ì†”ì°½ í¬ê¸° ë° ì •ì˜ í•¨ìˆ˜
 }
 
 void titleDraw() {
 	printf("\n\n\n\n");
-	printf("		########  #######  ####### #######  #			#  #    # ####### ###### \n");
-	printf("		#         #        #     # #     #  #			#  ##   # #       #    # \n");
-	printf("		########  #        #     # #     #  #			#  # #  # ####### #    # \n");
-	printf("		       #  #        #     # #     #  #			#  #  # # #       #    # \n");
-	printf("		########  #######  ####### #######  #######		#  #   ## #       ###### \n");
-	//Initial Bootup ¸Ş´º Ãâ·Â ÇÔ¼ö, ÃßÈÄ º¯°æ °¡´É
+	printf("		########  ####### #    # ####### #######  #			#  #    # ####### ###### \n");
+	printf("		#         #       #    # #     # #     #  #			#  ##   # #       #    # \n");
+	printf("		########  #       ###### #     # #     #  #			#  # #  # ####### #    # \n");
+	printf("		       #  #       #    # #     # #     #  #			#  #  # # #       #    # \n");
+	printf("		########  ####### #    # ####### #######  #######		#  #   ## #       ###### \n");
+	//Initial Bootup ë©”ë‰´ ì¶œë ¥ í•¨ìˆ˜, ì¶”í›„ ë³€ê²½ ê°€ëŠ¥
 }
 
 void gotoxy(int x, int y)
@@ -139,7 +140,7 @@ void gotoxy(int x, int y)
 	pos.X = x;
 	pos.Y = y;
 	SetConsoleCursorPosition(consoleHandle, pos);
-	//Ä¿¼­ À§Ä¡ ÀÌµ¿ ÇÔ¼ö
+	//ì»¤ì„œ ìœ„ì¹˜ ì´ë™ í•¨ìˆ˜
 }
 
 void console() {
@@ -157,7 +158,7 @@ void console() {
 		printf("                      INPUT exit TO ESCAPE\n");
 		printf(" > ");
 		scanf("%s", message);
-		if (strcmp(message,"exit")==0)
+		if (strcmp(message, "exit") == 0)
 		{
 			gotoxy(0, 0);
 			printf("CONSOLE MODE |");
@@ -187,15 +188,17 @@ int menuDraw() {
 	int x = 27;
 	int y = 12;
 	gotoxy(x - 2, y);
-	printf("> Å×½ºÆ®¸Ş´º 1");
+	printf("> ì•Œë¦¬ë¯¸ í™•ì¸");
 	gotoxy(x, y + 2);
-	printf("Å×½ºÆ®¸Ş´º 2");
+	printf("ì‹ ì²­ í™•ì¸");
 	gotoxy(x, y + 4);
-	printf("ÇĞ»ç ÀÏÁ¤ È®ÀÎ");
+	printf("í•™ì‚¬ ì¼ì • í™•ì¸");
 	gotoxy(x, y + 6);
 	printf("CONSOLE");
 	gotoxy(x, y + 8);
-	printf("ÀÎÅÍ³İ ¿¬°á Àç È®ÀÎ");
+	printf("ì¸í„°ë„· ì—°ê²° ì¬ í™•ì¸");
+	gotoxy(x, y + 10);
+	printf("ë‚˜ê°€ê¸°");
 	while (1) {
 		int n = keyControl();
 		switch (n) {
@@ -211,7 +214,7 @@ int menuDraw() {
 		}
 
 		case DOWN: {
-			if (y < 20) {
+			if (y < 22) {
 				gotoxy(x - 2, y);
 				printf(" ");
 				gotoxy(x - 2, y += 2);
@@ -233,20 +236,20 @@ bool InetStatus() {
 	printf("Universal Internet Connection Verification System\n");
 	if (internet_status == TRUE)
 	{
-		printf("ÀÌ¹Ì ÀÎÅÍ³İ¿¡ ¿¬°áµÇ¾î ÀÖ½À´Ï´Ù. ´Ù½Ã °Ë»çÇÏ½Ã°Ú½À´Ï±î?\n");
+		printf("ì´ë¯¸ ì¸í„°ë„·ì— ì—°ê²°ë˜ì–´ ìˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ê²€ì‚¬í•˜ì‹œê² ìŠµë‹ˆê¹Œ?\n");
 	}
 	if (internet_status == FALSE)
 	{
-		printf("ÇöÀç ÀÎÅÍ³İ ¿¬°á »óÅÂ¸¦ °Ë»çÇÕ´Ï´Ù.\n");
+		printf("í˜„ì¬ ì¸í„°ë„· ì—°ê²° ìƒíƒœë¥¼ ê²€ì‚¬í•©ë‹ˆë‹¤.\n");
 	}
 	printf("\n");
 	int YN_return_value;
 	int x = 3;
 	int y = 3;
 	gotoxy(x - 2, y); //1
-	printf("> ÀÎÅÍ³İ ¿¬°á °Ë»ç");
+	printf("> ì¸í„°ë„· ì—°ê²° ê²€ì‚¬");
 	gotoxy(x + 20, y); //13
-	printf("°Ç³Ê¶Ù±â");
+	printf("ê±´ë„ˆë›°ê¸°");
 	while (1) {
 		int n = keyControl();
 		switch (n) {
@@ -282,14 +285,14 @@ cp1:
 		if (::InternetGetConnectedStateEx(&dwFlag, szName, 256, 0)) {
 			gotoxy(0, 4);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);//Green Text
-			printf(" ONLINE(¿¬°á»óÅÂ¾çÈ£)\n");
+			printf(" ONLINE(ì—°ê²°ìƒíƒœì–‘í˜¸)\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 			return true;
 		}
 		else {
 			gotoxy(0, 4);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);//RED Text
-			printf(" OFFLINE(¿¬°á»óÅÂºÒ·®)\n");
+			printf(" OFFLINE(ì—°ê²°ìƒíƒœë¶ˆëŸ‰)\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 			return false;
 		}
@@ -297,7 +300,7 @@ cp1:
 	if (YN_return_value == 21) {
 		gotoxy(0, 4);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);//RED Text
-		printf("\n¿ÀÇÁ¶óÀÎ »óÅÂ·Î ÇÁ·Î±×·¥À» ±¸µ¿ÇÕ´Ï´Ù.\n");
+		printf("\nì˜¤í”„ë¼ì¸ ìƒíƒœë¡œ í”„ë¡œê·¸ë¨ì„ êµ¬ë™í•©ë‹ˆë‹¤.\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 		return false;
 	}
@@ -306,9 +309,9 @@ cp1:
 void Request_Calendar() {
 	if (internet_status == TRUE)
 	{
-		system("curl -G \"https://open.neis.go.kr/hub/SchoolSchedule?ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=7010059\" -d \"KEY=c4d7533bcef9417097be47a4f311dd68&Type=xml&pIndex=1&pSize=300\" -o ./calendar.xml");
+		system("curl -G \"https://open.neis.go.kr/hub/SchoolSchedule?ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=7010059\" -d \"KEY=c4d7533bcef9417097be47a4f311dd68&Type=xml&pIndex=1&pSize=300\" -o calendar.xml");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);//Green Text
-		printf("ÀÎÅÍ³İ¿¡¼­ Á¤º¸¸¦ °¡Á®¿À±â¸¦ ¼º°øÇÏ¿´½À´Ï´Ù.\n");
+		printf("ì¸í„°ë„·ì—ì„œ ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ê¸°ë¥¼ ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤.\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 		system("PAUSE");
 		Parse_Calendar();
@@ -317,7 +320,7 @@ void Request_Calendar() {
 	else
 	{
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);//RED Text
-		printf("ÀÎÅÍ³İÀÌ ¿¬°áµÇÁö ¾Ê¾ÒÀ¸¹Ç·Î Á¤º¸ °¡Á®¿À±â¸¦ ½ÇÆĞÇÏ¿´½À´Ï´Ù.\n");
+		printf("ì¸í„°ë„·ì´ ì—°ê²°ë˜ì§€ ì•Šì•˜ìœ¼ë¯€ë¡œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°ë¥¼ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 		system("PAUSE");
 	}
@@ -330,9 +333,9 @@ void Parse_Calendar() {
 	printf("Powered by Python\n");
 	system(".\\CalendarParser\\PythonApplication1.exe");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);//Green Text
-	printf("¿ÜºÎ Á¤º¸ ÆÄ½Ì ¼º°ø\n");
+	printf("ì™¸ë¶€ ì •ë³´ íŒŒì‹± ì„±ê³µ\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
-	
+
 	/*
 	cal_idx = File_Line_CHK();
 	calfp = fopen("calendar.txt", "r");
@@ -361,27 +364,27 @@ void Parse_Calendar() {
 
 	}
 	fclose(ddd);
-		
-		
-		
+
+
+
 	/*
 	char buffer[1001], * token;
 
 	int i = 0;
 	int idx = 0;
 	while (!feof(calfp)) {
-		printf("ÁøÀÔ");
-		i = 0;//iÃÊ±âÈ­
+		printf("ì§„ì…");
+		i = 0;//iì´ˆê¸°í™”
 		fgets(buffer, 1001, calfp);
-		token = strtok(buffer, " "); // 
+		token = strtok(buffer, " "); //
 		while (token != NULL) {
-			printf("ÁøÀÔ2");
+			printf("ì§„ì…2");
 			if (i == 0) {
 				int date = atoi(token);
 				int year = date / 10000;
 				int month = (date / 100) % 100;
 				int day = date % 100;
-				
+
 			}
 			else if (i == 1) {
 				strcpy(evt[idx].eventname, token);
@@ -415,40 +418,40 @@ void Parse_Calendar() {
 	int i = 0;
 	int idx = 0;
 	while (!feof(calfp)) {
-		i = 0;//iÃÊ±âÈ­
+		i = 0;//iì´ˆê¸°í™”
 		fgets(buffer, 1000, calfp);
-		token = strtok(buffer, " "); // 
+		token = strtok(buffer, " "); //
 		while (token != NULL) {
 			if (i == 0) {
-				
+
 			}
 			if (i == 1) {
-				
+
 			}
 			if (i == 2) {
-				
+
 			}
 			if (i == 3)
 			{
-				
+
 			}
 			if (i == 4) {
-				
+
 			}
 			i++;
 			token = strtok(NULL, " ");
 		}
 		idx++;
-		
+
 	}
-	
+
 	for (int i = 0; i < cal_idx; i++) {
 		printf("%d %d %d %s\n", evt[i].year, evt[i].month, evt[i].day, evt[i].eventname);
 	}
-	fclose(calfp); // ÆÄÀÏ ´İ±â
+	fclose(calfp); // íŒŒì¼ ë‹«ê¸°
 	*/
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);//Green Text
-	printf("ÆÄ½Ì ÈÄ ÀúÀå ¼º°ø\n");
+	printf("íŒŒì‹± í›„ ì €ì¥ ì„±ê³µ\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 	system("PAUSE");
 	remove_scrollbar();
@@ -456,17 +459,17 @@ void Parse_Calendar() {
 }
 
 void timechk() {
-	timer = time(NULL); // 1970³â 1¿ù 1ÀÏ 0½Ã 0ºĞ 0ÃÊºÎÅÍ ½ÃÀÛÇÏ¿© ÇöÀç±îÁöÀÇ ÃÊ
-	t = localtime(&timer); // Æ÷¸ËÆÃÀ» À§ÇØ ±¸Á¶Ã¼¿¡ ³Ö±â
-	//year »ç¿ë½Ã +1900 ÇÊ¿ä
-	//month »ç¿ë½Ã +1 ÇÊ¿ä
+	timer = time(NULL); // 1970ë…„ 1ì›” 1ì¼ 0ì‹œ 0ë¶„ 0ì´ˆë¶€í„° ì‹œì‘í•˜ì—¬ í˜„ì¬ê¹Œì§€ì˜ ì´ˆ
+	t = localtime(&timer); // í¬ë§·íŒ…ì„ ìœ„í•´ êµ¬ì¡°ì²´ì— ë„£ê¸°
+	//year ì‚¬ìš©ì‹œ +1900 í•„ìš”
+	//month ì‚¬ìš©ì‹œ +1 í•„ìš”
 	return;
 }
 
 void chkcal() {
-	int cal_move_mode = 1;//±âº»ÀûÀ¸·Î Á¤¼ø ÀÌµ¿ 1, ¿ª¼ø ÀÌµ¿ 0
-	int move_finalized_end = 0;//±âº»ÀûÀ¸·Î OFF, ³¡ ³¯Â¥¿¡ µµ´Ş½Ã ON
-	int move_finalized_first = 0;//±âº»ÀûÀ¸·Î OFF, ½ÃÀÛ ³¯Â¥¿¡ µµ´Ş½Ã ON
+	int cal_move_mode = 1;//ê¸°ë³¸ì ìœ¼ë¡œ ì •ìˆœ ì´ë™ 1, ì—­ìˆœ ì´ë™ 0
+	int move_finalized_end = 0;//ê¸°ë³¸ì ìœ¼ë¡œ OFF, ë ë‚ ì§œì— ë„ë‹¬ì‹œ ON
+	int move_finalized_first = 0;//ê¸°ë³¸ì ìœ¼ë¡œ OFF, ì‹œì‘ ë‚ ì§œì— ë„ë‹¬ì‹œ ON
 	system("cls");
 	add_scrollbar();
 	printf("LOADING CONSOLE LOG\n");
@@ -506,14 +509,14 @@ calendarsetup:
 	if (strcmp(filename, d_last) == 0 && cal_move_mode == 1) {
 		move_finalized_end = 1;
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);//RED Text
-		printf("ÇöÀç °è½Å ³¯Â¥°¡ ¸¶Áö¸· ÀÏÁ¤ÀÔ´Ï´Ù.\n");
+		printf("í˜„ì¬ ê³„ì‹  ë‚ ì§œê°€ ë§ˆì§€ë§‰ ì¼ì •ì…ë‹ˆë‹¤.\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 		goto ForceKeyInput;
 	}
 	else if (strcmp(filename, d_first) == 0 && cal_move_mode == 0) {
 		move_finalized_first = 1;
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);//RED Text
-		printf("ÇöÀç °è½Å ³¯Â¥°¡ Ã¹¹øÂ° ÀÏÁ¤ÀÔ´Ï´Ù.\n");
+		printf("í˜„ì¬ ê³„ì‹  ë‚ ì§œê°€ ì²«ë²ˆì§¸ ì¼ì •ì…ë‹ˆë‹¤.\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);//WHITE TEXT
 		goto ForceKeyInput;
 	}
@@ -553,13 +556,13 @@ calendarsetup:
 		}
 
 	}
-	printf("\n\n\n          °¡Àå °¡±î¿î Çà»çºÎÅÍ º¸¿©Áİ´Ï´Ù. \n          ÀÌÀü Çà»ç³ª ´ÙÀ½ Çà»ç¸¦ È®ÀÎÇÏ½Ã·Á¸é È­»ìÇ¥ Å°·Î Á¶Á¤ÇÏ½Ê½Ã¿À.\n          ESC·Î È­¸éÀ» ³ª°©´Ï´Ù.\n\n");
-	
+	printf("\n\n\n          ê°€ì¥ ê°€ê¹Œìš´ í–‰ì‚¬ë¶€í„° ë³´ì—¬ì¤ë‹ˆë‹¤. \n          ì´ì „ í–‰ì‚¬ë‚˜ ë‹¤ìŒ í–‰ì‚¬ë¥¼ í™•ì¸í•˜ì‹œë ¤ë©´ í™”ì‚´í‘œ í‚¤ë¡œ ì¡°ì •í•˜ì‹­ì‹œì˜¤.\n          ESCë¡œ í™”ë©´ì„ ë‚˜ê°‘ë‹ˆë‹¤.\n\n");
 
-	fread(buffer, 1, 1000, calfp); //ÀüÃ¼ ÀĞ±â
+
+	fread(buffer, 1, 1000, calfp); //ì „ì²´ ì½ê¸°
 	printf("%s", buffer);
 
-	fclose(calfp); //ÆÄÀÏ Æ÷ÀÎÅÍ ´İ±â
+	fclose(calfp); //íŒŒì¼ í¬ì¸í„° ë‹«ê¸°
 ForceKeyInput:
 	while (1) {
 		int key_input = keyControl();
@@ -634,7 +637,265 @@ ForceKeyInput:
 	goto calendarsetup;
 }
 
+//í•µì‹¬ ê¸°ëŠ¥ ê´€ë ¨ í•¨ìˆ˜
+
+int submit_draw(int from) {
+	int x = 27;
+	int y = from + 12;
+	gotoxy(x - 2, y);
+	printf("> ì‹ ì²­");
+	gotoxy(x, y + 2);
+	printf("ì‹ ì²­ ì·¨ì†Œ");
+	gotoxy(x, y + 4);
+	printf("ìƒì„¸ ì •ë³´");
+	while (1) {
+		int n = keyControl();
+		switch (n) {
+		case UP: {
+			if (y > from + 12)
+			{
+				gotoxy(x - 2, y);
+				printf(" ");
+				gotoxy(x - 2, y -= 2);
+				printf(">");
+			}
+			break;
+		}
+
+		case DOWN: {
+			if (y < from + 4 + 12) {
+				gotoxy(x - 2, y);
+				printf(" ");
+				gotoxy(x - 2, y += 2);
+				printf(">");
+			}
+			break;
+		}
+
+		case SUBMIT: {
+			return y - from - 12;
+		}
+		case ESCAPE:
+			return -1;
+		}
+	}
+}
+
+int ealimi_draw(struct document doc[1000], int line)
+{
+	int i;
+	int x = 27;
+	int y = 12;
+	for (i = 0; i < line; i++)
+	{
+		gotoxy(x, y + i * 2);
+		printf("%d. %s", i + 1, doc[i].name);
+	}
+	gotoxy(x - 2, y);
+	printf(">");
+	while (1) {
+		int n = keyControl();
+		switch (n) {
+		case UP: {
+			if (y > 12)
+			{
+				gotoxy(x - 2, y);
+				printf(" ");
+				gotoxy(x - 2, y -= 2);
+				printf(">");
+			}
+			break;
+		}
+
+		case DOWN: {
+			if (y < (line - 1) * 2 + 12) {
+				gotoxy(x - 2, y);
+				printf(" ");
+				gotoxy(x - 2, y += 2);
+				printf(">");
+			}
+			break;
+		}
+
+		case SUBMIT: {
+			return y - 12;
+		}
+		case ESCAPE: {
+			return ESCAPE;
+		}
+		}
+	}
+}
+
+void ealimi_menu(struct document doc[1000], int line)
+{
+	int i = 0;
+	char list[500] = "explorer ";
+	add_scrollbar();
+	while (1)
+	{
+		i = 0;
+		system("cls");
+		titleDraw();
+		int menuReturn = ealimi_draw(doc, line);
+		if (menuReturn == ESCAPE)	break;
+		while (1)
+		{
+			if (menuReturn == i * 2)
+			{
+				strcat(list, "\"");
+				strcat(list, doc[i].link);
+				strcat(list, "\"");
+				gotoxy(0, 400);
+				printinfo(doc, i);
+				printf("\n\n\t*ìŠ¤í˜ì´ìŠ¤í‚¤ë¡œ ì•Œë¦¬ë¯¸ ë°”ë¡œê°€ê¸°*");
+				printf("\n\t*ì—”í„°í‚¤ë¡œ ëŒì•„ê°€ê¸°*\n\n\n\n\n");
+				while (1)
+				{
+					int key_value = _getch();
+					if (key_value == 13)
+					{
+						//remove_scrollbar();
+						//return;
+						break;
+					}
+					if (key_value == 32)
+					{
+						//printf("%s\n", list);
+						system(list);
+					}
+				}
+			}
+			i++;
+			if (i >= line)	break;
+		}
+	}
+	remove_scrollbar();
+	return;
+}
+
+void submit_menu(struct document doc[1000], int line)
+{
+	int submit[1000], issubmitted[1000] = { 0, };
+	int i, j = 0, bin = -1;
+
+	FILE* fp = fopen("submitlist.txt", "r+");
+
+	if (fp == NULL)
+	{
+		perror("Error");
+		exit(1);
+	}
+	fscanf(fp, "%d", &bin);
+	if (bin == -1)
+	{
+		for (i = 0; i < line; i++)
+		{
+			if (doc[i].cansubmit == 1)  fprintf(fp, "%d %d\n", i, 0);
+		}
+	}
+	fclose(fp);
+
+	fp = fopen("submitlist.txt", "r+");
+	for (i = 0; i < line; i++)
+	{
+		if (doc[i].cansubmit == 1)
+		{
+			submit[j] = i;
+			fscanf(fp, "%d %d", &bin, &issubmitted[i]);
+			j++;
+		}
+	}
+	fclose(fp);
+	fp = fopen("submitlist.txt", "w+");
+
+	add_scrollbar();
+	while (1)
+	{
+		system("cls");
+		titleDraw();
+		add_scrollbar();
+		for (i = 0; i < j; i++)
+		{
+			gotoxy(16, i * 2 + 12);
+			printf("%d. %s", i + 1, doc[submit[i]].name);
+			gotoxy(70, i * 2 + 12);
+			printf("................ì‹ ì²­ì—¬ë¶€: %d", issubmitted[submit[i]]);
+		}
+		int menuReturn = submit_draw(j * 2 + 2);
+		if (menuReturn == 0)
+		{
+			gotoxy(16, i * 2 + 12);
+			printf("ì‹ ì²­í•  í•­ëª©ì˜ ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš” ");
+			scanf("%d", &bin);
+			bin = submit[bin - 1];
+			issubmitted[bin] = 1;
+			//for (i = 0; i < line; i++)
+			//{
+			//	if (doc[i].cansubmit == 1)
+			//	{
+			//		fprintf(fp, "%d %d\n", i, issubmitted[i]);
+			//	}
+			//}
+		}
+		if (menuReturn == 2)
+		{
+			gotoxy(16, i * 2 + 12);
+			printf("ì‹ ì²­ì·¨ì†Œí•  í•­ëª©ì˜ ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš” ");
+			scanf("%d", &bin);
+			bin = submit[bin - 1];
+			issubmitted[bin] = 0;
+			//for (i = 0; i < line; i++)
+			//{
+			//	if (doc[i].cansubmit == 1)
+			//	{
+			//		fprintf(fp, "%d %d\n", i, issubmitted[i]);
+			//	}
+			//}
+		}
+		if (menuReturn == 4)
+		{
+			gotoxy(16, i * 2 + 12);
+			printf("ìƒì„¸ì •ë³´ë¥¼ í‘œì‹œí•  í•­ëª©ì˜ ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš” ");
+			scanf("%d", &bin);
+			bin = submit[bin - 1];
+			gotoxy(0, 400);
+			printinfo(doc, bin);
+			printf("\n\n\t*ì—”í„°í‚¤ë¡œ ëŒì•„ê°€ê¸°*\n\n\n\n\n");
+			while (1)
+			{
+				int key_value = _getch();
+				if (key_value == 13) break;
+			}
+		}
+		if (menuReturn == 6)
+		{
+			for (i = 0; i < line; i++)
+			{
+				if (doc[i].cansubmit == 1)
+				{
+					fprintf(fp, "%d %d\n", i, issubmitted[i]);
+				}
+			}
+			fclose(fp);
+			remove_scrollbar();
+			return;
+		}
+		if (menuReturn == -1)	break;
+	}
+	fclose(fp);
+	remove_scrollbar();
+	return;
+}
+
 int main() {
+	int line_stu, line_doc;
+	struct stu student[101];
+	struct document doc[1000];
+	line_stu = getstuinfo(student);
+	line_doc = getdocinfo(doc);
+
+
 	init();
 	titleDraw();
 	internet_status = InetStatus();
@@ -647,6 +908,9 @@ int main() {
 		if (menuReturn == 4) chkcal();
 		if (menuReturn == 6) console();
 		if (menuReturn == 8) internet_status = InetStatus();
+		if (menuReturn == 2) submit_menu(doc, line_doc);
+		if (menuReturn == 0) ealimi_menu(doc, line_doc);
+		if (menuReturn == 10) break;
 	}
 	return 0;
 }
